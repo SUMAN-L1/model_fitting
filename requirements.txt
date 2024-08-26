@@ -5,5 +5,3 @@ statsmodels
 scipy
 matplotlib
 sklearn
-xlrd
-openpyxl
