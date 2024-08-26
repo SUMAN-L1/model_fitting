@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
-from statsmodels.regression import linear_model
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
@@ -23,40 +22,43 @@ def fit_models(df, x_col, y_col):
     # Linear model
     X = sm.add_constant(df[x_col])
     model = sm.OLS(df[y_col], X).fit()
-    results['Linear'] = model.summary2().tables[1].reset_index()
+    results['Linear'] = model.summary2().tables[1]
     
     # Quadratic model
     df['x2'] = df[x_col] ** 2
-    model = sm.OLS(df[y_col], sm.add_constant(df[['x_col', 'x2']])).fit()
-    results['Quadratic'] = model.summary2().tables[1].reset_index()
+    X_quad = sm.add_constant(df[['x_col', 'x2']])
+    model = sm.OLS(df[y_col], X_quad).fit()
+    results['Quadratic'] = model.summary2().tables[1]
     
     # Cubic model
     df['x3'] = df[x_col] ** 3
-    model = sm.OLS(df[y_col], sm.add_constant(df[['x_col', 'x2', 'x3']])).fit()
-    results['Cubic'] = model.summary2().tables[1].reset_index()
+    X_cubic = sm.add_constant(df[['x_col', 'x2', 'x3']])
+    model = sm.OLS(df[y_col], X_cubic).fit()
+    results['Cubic'] = model.summary2().tables[1]
     
     # Exponential model
     df['log_y'] = np.log(df[y_col])
     model = sm.OLS(df['log_y'], sm.add_constant(df[x_col])).fit()
-    results['Exponential'] = model.summary2().tables[1].reset_index()
+    results['Exponential'] = model.summary2().tables[1]
     
     # Logistic model
     model = smf.logit(f"{y_col} ~ {x_col}", data=df).fit()
-    results['Logistic'] = model.summary2().tables[1].reset_index()
+    results['Logistic'] = model.summary2().tables[1]
     
     # Quartic model
     df['x4'] = df[x_col] ** 4
-    model = sm.OLS(df[y_col], sm.add_constant(df[['x_col', 'x2', 'x3', 'x4']])).fit()
-    results['Quartic'] = model.summary2().tables[1].reset_index()
+    X_quartic = sm.add_constant(df[['x_col', 'x2', 'x3', 'x4']])
+    model = sm.OLS(df[y_col], X_quartic).fit()
+    results['Quartic'] = model.summary2().tables[1]
     
     # Modified Exponential model
     model = smf.ols(f"{y_col} ~ np.exp({x_col})", data=df).fit()
-    results['Modified Exponential'] = model.summary2().tables[1].reset_index()
+    results['Modified Exponential'] = model.summary2().tables[1]
     
     # Cobb-Douglas model
     df['log_x'] = np.log(df[x_col])
     model = smf.ols(f"{y_col} ~ log_x", data=df).fit()
-    results['Cobb-Douglas'] = model.summary2().tables[1].reset_index()
+    results['Cobb-Douglas'] = model.summary2().tables[1]
     
     return results
 
