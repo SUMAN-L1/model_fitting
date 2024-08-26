@@ -1,7 +1,6 @@
-ingimport streamlit as st
+import streamlit as st
 import pandas as pd
 import numpy as np
-import chardet
 import statsmodels.api as sm
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
@@ -72,19 +71,16 @@ def plot_actual_vs_fitted(y, y_pred, title):
 
 # Load Data
 st.title("Crop Production Modeling")
-uploaded_file = st.file_uploader("Choose a CSV file", encoding='latin1', type=["csv","xlsx"])
+uploaded_file = st.file_uploader("Choose a CSV or Excel file", type=["csv", "xlsx"])
 
 if uploaded_file is not None:
-    # Detect the file encoding
-    rawdata = uploaded_file.read()
-    result = chardet.detect(rawdata)
-    encoding = result['encoding']
-
-    # Reset file pointer to the beginning
-    uploaded_file.seek(0)
-
-    # Read the CSV file with detected encoding
-    df = pd.read_csv(uploaded_file, encoding=encoding)
+    # Determine the file type and read the file
+    if uploaded_file.name.endswith('.csv'):
+        # Reading CSV file with specified encoding to avoid UnicodeDecodeError
+        df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
+    elif uploaded_file.name.endswith('.xlsx'):
+        # Reading Excel file
+        df = pd.read_excel(uploaded_file)
 
     st.write("Data Preview:")
     st.write(df.head())
