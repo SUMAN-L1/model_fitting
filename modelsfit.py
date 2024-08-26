@@ -71,7 +71,7 @@ def plot_actual_vs_fitted(y, y_pred, title):
 
 # Load Data
 st.title("Crop Production Modeling")
-uploaded_file = st.file_uploader("Choose a CSV file", type=["csv", "xlsx", "xls"])
+uploaded_file = st.file_uploader("Choose a CSV file", encoding='ISO-8859-1',type=["csv", "xlsx", "xls"])
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
