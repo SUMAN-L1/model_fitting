@@ -42,7 +42,8 @@ def fit_models(df, x_col, y_col):
     results['Exponential'] = model.summary2().tables[1]
     
     # Logistic model
-    model = smf.logit(f"{y_col} ~ {x_col}", data=df).fit()
+    df['logit_y'] = np.log(df[y_col] / (1 - df[y_col]))
+    model = sm.OLS(df['logit_y'], sm.add_constant(df[x_col])).fit()
     results['Logistic'] = model.summary2().tables[1]
     
     # Quartic model
@@ -85,10 +86,10 @@ def main():
             st.write("Data Preview:")
             st.write(df.head())
             
-            x_col = st.selectbox("Select Independent Variable", df.columns)
-            y_col = st.selectbox("Select Dependent Variable", df.columns)
+            x_col = 'Area'  # Fixed to 'Area'
+            y_col = 'Production'  # Fixed to 'Production'
             
-            if x_col and y_col:
+            if x_col in df.columns and y_col in df.columns:
                 results = fit_models(df, x_col, y_col)
                 
                 # Display model results and plots
