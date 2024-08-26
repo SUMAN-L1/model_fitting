@@ -1,4 +1,4 @@
-import streamlit as st
+ingimport streamlit as st
 import pandas as pd
 import numpy as np
 import chardet
@@ -72,7 +72,7 @@ def plot_actual_vs_fitted(y, y_pred, title):
 
 # Load Data
 st.title("Crop Production Modeling")
-uploaded_file = st.file_uploader("Choose a CSV file", type=["csv","xlsx"])
+uploaded_file = st.file_uploader("Choose a CSV file", encoding='latin1', type=["csv","xlsx"])
 
 if uploaded_file is not None:
     # Detect the file encoding
